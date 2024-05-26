@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const breedName = document.getElementById('breedName').value.trim();
         if (breedName) {
             try {
-                const response = await fetch(`/api/breed/${breedName}`);
+                const response = await fetch(`/api/breed/${breedName}`);// update the end point 
                 if (response.status === 404) {
                     document.getElementById('breedInfoContainer').innerHTML = '<p>Breed not found</p>';
                     document.getElementById('breedImageContainer').innerHTML = '';
@@ -52,6 +52,7 @@ function updateBreedInfo(data) {
         <p><strong>Height:</strong> ${data.height.metric} cm</p>
     `;
 }
+
 
 function displayImage(url) {
     const imageContainer = document.getElementById('breedImageContainer');
