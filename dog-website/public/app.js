@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await fetch('/api/random');
             const data = await response.json();
+            console.log('Random dog data:', data); // Log response data
             if (data.url) {
                 displayImage(data.url);
                 if (data.breed) {
