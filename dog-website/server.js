@@ -1,66 +1,96 @@
-const express = require('express');
-const axios = require('axios');
-const bodyParser = require('body-parser');
-const dotenv = require('dotenv');
+import express from 'express';
+import axios from 'axios';
+import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
+import { OpenAI } from 'openai';
+import cors from "cors";
 
-// Load environment variables from .env file
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 const DOG_API_KEY = process.env.DOG_API_KEY;
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
+const openai = new OpenAI(OPENAI_API_KEY);
+
+app.use(cors());
 app.use(express.static('public'));
 app.use(bodyParser.json());
 
-app.get('/api/breeds', async (req, res) => {
-    try {
-        const response = await axios.get('https://api.thedogapi.com/v1/breeds', {
-            headers: { 'x-api-key': DOG_API_KEY }
-        });
-        res.json(response.data);
-    } catch (error) {
-        res.status(500).send(error.toString());
-    }
-});
 
-app.get('/api/breed/:name', async (req, res) => {
-    const breedName = req.params.name.toLowerCase();
+
+
+
+app.post('/api/breed-info', async (req, res) => { //https://api.thedogapi.com/v1/breeds
+    const { breedName } = req.body;
+
     try {
-        const response = await axios.get(`https://api.thedogapi.com/v1/breeds/search?q=${breedName}`, {
+        // Fetch breed information from the dog API
+        const breedResponse = await axios.get(`https://api.thedogapi.com/v1/breeds/search?q=${breedName}`, {
             headers: { 'x-api-key': DOG_API_KEY }
         });
-        const breed = response.data.find(b => b.name.toLowerCase() === breedName);
+
+        const breed = breedResponse.data.find(b => b.name.toLowerCase() === breedName.toLowerCase());
+
         if (breed) {
+            // Fetch image by reference image ID
             const imageResponse = await axios.get(`https://api.thedogapi.com/v1/images/${breed.reference_image_id}`, {
                 headers: { 'x-api-key': DOG_API_KEY }
             });
-            breed.image = imageResponse.data.url;
-            res.json(breed);
+
+            const imageUrl = imageResponse.data.url;
+
+////////////////////////
+
+            // Generate description using OpenAI
+            const openaiResponse = await openai.chat.completions.create({
+                model: "gpt-3.5-turbo",
+                messages: [
+                    {
+                        role: "system",
+                        content: "You are a helpful assistant providing information about dog breeds."
+                    },
+                    {
+                        role: "user",
+                        content: `Tell a infomation about the ${breed.name}. Include its temperament, typical location, and whether it is a mixed breed.`
+                    }
+                ],
+                max_tokens: 150
+            });
+
+            if (openaiResponse.choices && openaiResponse.choices.length > 0) {
+                const story = openaiResponse.choices[0].message.content;
+                console.log('OpenAI response received:', story);
+
+                res.json({
+                    breed,
+                    image: imageUrl,
+                    story
+                });
+            } else {
+                console.log('OpenAI did not send a response:', openaiResponse);
+                res.json({
+                    breed,
+                    image: imageUrl,
+                    story: "No story could be generated."
+                });
+            }
         } else {
-            res.status(404).send('Breed not found');
+            res.status(404).json({ error: 'Breed not found' });
         }
     } catch (error) {
-        res.status(500).send(error.toString());
+        console.error('Error in /api/breed-info:', error);
+        res.status(500).json({ error: error.toString() });
     }
 });
 
-app.get('/api/random', async (req, res) => {
-    try {
-        const response = await axios.get('https://api.thedogapi.com/v1/images/search?size=med&mime_types=jpg&format=json&has_breeds=true&order=RANDOM&page=0&limit=1', {
-            headers: { 'x-api-key': DOG_API_KEY }
-        });
-        const image = response.data[0];
-        res.json({
-            url: image.url,
-            breed: image.breeds[0]
-        });
-    } catch (error) {
-        res.status(500).send(error.toString());
-    }
-});
+
+//chat gtp post call 
+
+
 
 app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+    console.log(`Server running on port ${port}`);
 });

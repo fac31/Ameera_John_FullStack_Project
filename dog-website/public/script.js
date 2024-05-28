@@ -19,7 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('searchButton').addEventListener('click', async () => {
         const breedName = document.getElementById('breedName').value.trim();
-        if (breedName) {
+
+        if (breedName) {//ftech begins 
             try {
                 const response = await fetch(`/api/breed/${breedName}`);// update the end point 
                 if (response.status === 404) {
@@ -58,3 +59,23 @@ function displayImage(url) {
     const imageContainer = document.getElementById('breedImageContainer');
     imageContainer.innerHTML = `<img src="${url}" alt="Dog Image" style="width:300px;">`;
 }
+
+//chat gtp desplay text 
+const chatGPTResponse = await openai.chat.completions.create({
+    model: "gpt-3.5-turbo",
+    messages: [
+      {
+        role: "system",
+        content: "You are a helpful assistant giving dog infomation."
+      },
+      {
+        role: "user",
+        content: "Fristly write about dog breed average hight, dimentions, common location , weather its a mixed breed" + breedName + " in a magical forest."
+      }
+    ],
+    max_tokens: 100
+  });
+
+  const story = chatGPTResponse.choices[0].message.content;
+
+
