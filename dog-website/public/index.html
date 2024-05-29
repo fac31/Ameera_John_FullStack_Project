@@ -3,15 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dog Breed Search</title>
+    <title>Welcome to Dog World</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <h1>Dog Breed Information</h1>
-    <div class="input-text">
-        <input id="input-text" placeholder="Enter Breed Name...."></input>
-    <button onclick="displayText()">Search</button>
-    <div id="breedImageContainer"></div>
-    <div id="display-area"></div>
-    <script src="script.js"></script>
+    <h1>Welcome to Dog World</h1>
+    <p>Click the button below to start!</p>
+    <button onclick="startLoading()">Start</button>
+
+    <script>
+        function startLoading() {
+            window.location.href = 'loading.html';
+        }
+    </script>
 </body>
 </html>
