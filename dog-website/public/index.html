@@ -7,13 +7,11 @@
 </head>
 <body>
     <h1>Dog Breed Information</h1>
-    <input type="text" id="breedName" placeholder="Enter breed name">
-    <button id="searchButton">Search</button>
+    <div class="input-text">
+        <input id="input-text" placeholder="Enter Breed Name...."></input>
+    <button onclick="displayText()">Search</button>
     <div id="breedImageContainer"></div>
-    <div id="breedInfoContainer"></div>
-    <div id="storyContainer" class="h-[250px] w-[500px] rounded-lg bg-purple-200 p-6 font-light italic">
-        Story here
-    </div>
+    <div id="display-area"></div>
     <script src="script.js"></script>
 </body>
 </html>

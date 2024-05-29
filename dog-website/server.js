@@ -10,89 +10,47 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 
-const DOG_API_KEY = process.env.DOG_API_KEY;
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-
-const openai = new OpenAI(OPENAI_API_KEY);
-
 app.use(cors());
 app.use(express.static('public'));
 app.use(bodyParser.json());
 
-
-
-
-
-app.post('/api/breed-info', async (req, res) => { //https://api.thedogapi.com/v1/breeds
-    const { breedName } = req.body;
-
-    try {
-        // Fetch breed information from the dog API
-        const breedResponse = await axios.get(`https://api.thedogapi.com/v1/breeds/search?q=${breedName}`, {
-            headers: { 'x-api-key': DOG_API_KEY }
-        });
-
-        const breed = breedResponse.data.find(b => b.name.toLowerCase() === breedName.toLowerCase());
-
-        if (breed) {
-            // Fetch image by reference image ID
-            const imageResponse = await axios.get(`https://api.thedogapi.com/v1/images/${breed.reference_image_id}`, {
-                headers: { 'x-api-key': DOG_API_KEY }
-            });
-
-            const imageUrl = imageResponse.data.url;
-
-////////////////////////
-
-            // Generate description using OpenAI
-            const openaiResponse = await openai.chat.completions.create({
-                model: "gpt-3.5-turbo",
-                messages: [
-                    {
-                        role: "system",
-                        content: "You are a helpful assistant providing information about dog breeds."
-                    },
-                    {
-                        role: "user",
-                        content: `Tell a infomation about the ${breed.name}. Include its temperament, typical location, and whether it is a mixed breed.`
-                    }
-                ],
-                max_tokens: 150
-            });
-
-            if (openaiResponse.choices && openaiResponse.choices.length > 0) {
-                const story = openaiResponse.choices[0].message.content;
-                console.log('OpenAI response received:', story);
-
-                res.json({
-                    breed,
-                    image: imageUrl,
-                    story
-                });
-            } else {
-                console.log('OpenAI did not send a response:', openaiResponse);
-                res.json({
-                    breed,
-                    image: imageUrl,
-                    story: "No story could be generated."
-                });
-            }
-        } else {
-            res.status(404).json({ error: 'Breed not found' });
-        }
-    } catch (error) {
-        console.error('Error in /api/breed-info:', error);
-        res.status(500).json({ error: error.toString() });
+// Route to verify the API key
+app.get('/api/verifykey', (req, res) => {
+    console.log('Received request for API key verification');
+    if (process.env.API_KEY && process.env.API_KEY.trim() !== '') {
+        console.log('API Key is set');
+        res.json({ success: true });
+    } else {
+        console.log('API Key is missing');
+        res.json({ success: false });
     }
 });
- 
 
+// Route to send requests to the OpenAI API
+app.post('/api/send', async (req, res) => {
+    // Include API key in requests to OpenAI or other services
+    const apiKey = process.env.API_KEY;
+    const requestData = {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(req.body)
+    };
 
+    // Send the request to the OpenAI API
+    try {
+        const apiResponse = await fetch('https://api.openai.com/v1/chat/completions', requestData);
+        const apiData = await apiResponse.json();
+        res.json(apiData);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch from OpenAI API: ' + err.message });
+    }
+});
 
-//chat gtp post call 
-
-
-
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+// Define the port and start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
