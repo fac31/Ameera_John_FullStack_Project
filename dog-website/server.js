@@ -1,14 +1,11 @@
 import express from 'express';
-import axios from 'axios';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
-import { OpenAI } from 'openai';
 import cors from "cors";
 
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.static('public'));
@@ -17,8 +14,8 @@ app.use(bodyParser.json());
 // Route to verify the API key
 app.get('/api/verifykey', (req, res) => {
     console.log('Received request for API key verification');
-    if (process.env.API_KEY && process.env.API_KEY.trim() !== '') {
-        console.log('API Key is set');
+   if (process.env.API_KEY && process.env.API_KEY.trim() !== '') {
+        console.log( 'API Key is set');
         res.json({ success: true });
     } else {
         console.log('API Key is missing');
@@ -27,8 +24,14 @@ app.get('/api/verifykey', (req, res) => {
 });
 
 // Route to send requests to the OpenAI API
-app.post('/api/send', async (req, res) => {
-    // Include API key in requests to OpenAI or other services
+app.post('/api/send', async (req, res) => { //constructs the request data object to be sent to the OpenAI API
+    
+     // Log the user's input
+     console.log('User Input:', req.body.messages[0].content);
+
+     const userInput = req.body.messages[0].content; //to het user input
+
+     // Include API key in requests to OpenAI or other services
     const apiKey = process.env.API_KEY;
     const requestData = {
         method: 'POST',
@@ -36,8 +39,16 @@ app.post('/api/send', async (req, res) => {
             'Authorization': `Bearer ${apiKey}`,
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(req.body)
+        body: JSON.stringify({//how it should reposnd 
+            model: "gpt-3.5-turbo",
+            messages: [
+                { role: "system", content: "You are a helpful assistant." },
+                { role: "user", content: "Write facts about " + userInput + "spcifically about the "+ userInput +"1. type of breed_group. 2.common life_span. 3.temperament. and 4.origin  ." }
+            ],
+            max_tokens: 100
+        })
     };
+
 
     // Send the request to the OpenAI API
     try {
