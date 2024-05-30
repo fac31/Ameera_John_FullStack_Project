@@ -4,24 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to Dog World</title>
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-    </style>
+    <link rel="stylesheet" href="../public/stylesheet.css">
 </head>
 <body>
     <h1>Welcome to Dog World</h1>
     <p>Click the button below to start!</p>
-    <button onclick="startLoading()">Start</button>
+    <div class="welcome-container">
+        <button class="welcome-button" onclick="startLoading()">Start</button>
+    </div>
 
     <script>
         function startLoading() {

@@ -4,16 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loading...</title>
+    <link rel="stylesheet" href="../public/stylesheet.css">
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             margin-top: 50px;
+            background-color: #0b1d3d; /* Dark blue background */
+            color: #fff; /* White text */
+            overflow: hidden;
         }
+
+        h1 {
+            margin-bottom: 20px;
+            position: relative;
+            color: #fff;
+            animation: glitter 1.5s infinite;
+        }
+
         .loader {
-            border: 16px solid #c6ba79;
+            border: 16px solid #4c3481;
             border-radius: 50%;
-            border-top: 16px solid #b279e4;
+            border-top: 16px solid #e0e479;
             width: 120px;
             height: 120px;
             animation: spin 2s linear infinite;
@@ -24,16 +36,29 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* Glitter animation */
+        @keyframes glitter {
+            0%, 100% {
+                text-shadow: 0 0 5px rgba(255, 255, 255, 0.5), 0 0 10px rgba(255, 255, 255, 0.5), 0 0 15px rgba(255, 255, 255, 0.5);
+            }
+            50% {
+                text-shadow: 0 0 10px rgba(255, 255, 255, 1), 0 0 20px rgba(255, 255, 255, 1), 0 0 30px rgba(255, 255, 255, 1);
+            }
+        }
     </style>
 </head>
 <body>
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>
     <h1>Loading...</h1>
     <div class="loader"></div>
 
     <script>
         setTimeout(function() {
             window.location.href = 'welcomePage.html';
-        }, 5000); // 3 seconds loading time
+        }, 5000); // 5 seconds loading time
     </script>
 </body>
 </html>
