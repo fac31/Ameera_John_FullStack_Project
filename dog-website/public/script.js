@@ -9,10 +9,21 @@ function randomDogImage() {
             return response.json();
         })
         .then(data => {
+            // Log the full JSON data
+            console.log('Fetched JSON data:', JSON.stringify(data, null, 2));
+            
             if (data.length > 0) {
                 const imageUrl = data[0].url;
                 const imageBox = document.getElementById('image-box');
                 imageBox.innerHTML = `<img src="${imageUrl}" alt="Random Dog Image" style="max-width: 100%; height: auto;">`;
+
+                // Check if the breed information is available and log the dog's name
+                if (data[0].breeds && data[0].breeds.length > 0) {
+                    const dogName = data[0].breeds[0].name;
+                    console.log('Dog name:', dogName);
+                } else {
+                    console.log('No breed information available for this image.');
+                }
             } else {
                 document.getElementById('image-box').textContent = "No image found.";
             }
@@ -23,21 +34,50 @@ function randomDogImage() {
         });
 }
 
+async function dogData() {
+    try {
+        const response = await fetch('https://api.thedogapi.com/v1/breeds', {
+            method: 'GET',
+            headers: {
+                'x-api-key': 'live_GWFeyCofOyIX0GjthdJVRwPHEma0GAkx2yU0mtkC2AViwRCFlNWXUvVkXXSgbR6J' // Replace with your actual Dog API key
+            }
+        });
 
-
-// Function to capture form data and send it to the server for API interaction
-function displayText() {
-    var text = document.getElementById('input-text').value;
-    document.getElementById('input-text').value = ""; // Clear the text area upon inputting the form data
-
-    verifyAPIKey().then(verified => {
-        if (verified && testConnected) {
-            sendRequest(text);
-        } else {
-            alert("API Key is missing. Please verify the API Key first.");
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
-    });
+
+        const data = await response.json();
+        console.log(data);
+
+        const inputText = document.getElementById('input-text').value.trim().toLowerCase();
+        let matchingBreed = null;
+        let foundImageID = null;
+
+        // Loop through the data to find a matching breed
+        for (const breed of data) {
+            if (breed.name.toLowerCase().includes(inputText)) {
+                matchingBreed = breed;
+                foundImageID = breed.image.id;
+                break; // Exit the loop once a match is found
+            }
+        }
+
+        if (matchingBreed) {
+            console.log("Breed found:");
+            console.log("Breed:", matchingBreed);
+            console.log("Image ID:", foundImageID);
+        } else {
+            console.log(`No breed found matching "${inputText}"`);
+        }
+
+    } catch (error) {
+        console.error('Fetch error:', error);
+        document.getElementById('display-area').innerText = "An error occurred. Please try again later.";
+    }
 }
+
+// Other existing functions...
 
 
 
