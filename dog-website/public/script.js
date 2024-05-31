@@ -1,30 +1,43 @@
-// Function to fetch dog image by breed name
-async function fetchDogImage() {
-    const breed = document.getElementById('input-text').value.trim(); // Get the breed input from the user
 
-    try {
-        const response = await fetch(`http://localhost:3000/api/dog/image/${breed}`);
-        const data = await response.json();
+// Function to fetch a random dog image and display it in the image box
+function randomDogImage() {
+    fetch('https://api.thedogapi.com/v1/images/search')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.length > 0) {
+                const imageUrl = data[0].url;
+                const imageBox = document.getElementById('image-box');
+                imageBox.innerHTML = `<img src="${imageUrl}" alt="Random Dog Image" style="max-width: 100%; height: auto;">`;
+            } else {
+                document.getElementById('image-box').textContent = "No image found.";
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching dog image:', error);
+            document.getElementById('image-box').textContent = "Failed to load image.";
+        });
+}
 
-        // Check if the response contains an image URL
-        if (data.imageUrl) {
-            // Display the dog image
-            displayDogImage(data.imageUrl);
+
+
+// Function to capture form data and send it to the server for API interaction
+function displayText() {
+    var text = document.getElementById('input-text').value;
+    document.getElementById('input-text').value = ""; // Clear the text area upon inputting the form data
+
+    verifyAPIKey().then(verified => {
+        if (verified && testConnected) {
+            sendRequest(text);
         } else {
-            // Display an error message if breed not found
-            document.getElementById('image-box').textContent = "Breed not found";
+            alert("API Key is missing. Please verify the API Key first.");
         }
-    } catch (error) {
-        console.error('Error fetching dog image:', error);
-        document.getElementById('image-box').textContent = "Error fetching dog image";
-    }
+    });
 }
-
-// Function to display dog image
-function displayDogImage(imageUrl) {
-    document.getElementById('image-box').innerHTML = `<img src="${imageUrl}" alt="Dog" class="h-full w-full object-cover rounded-lg"/>`;
-}
-
 
 
 

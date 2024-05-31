@@ -61,41 +61,14 @@ app.post('/api/send', async (req, res) => { //constructs the request data object
     }
 });
 
-/////////////////////////////////dog
+///////////////////////
 
-// Route to fetch dog image by breed name
-app.get('/api/dog/image/:breed', async (req, res) => {
-    const breed = req.params.breed;
-    const apiKeyDog = process.env.API_KEY_DOG; // Access Dog API key from environment variable
 
-    try {
-        // Fetch breed information
-        const response = await fetch(`https://api.thedogapi.com/v1/breeds/search?q=${breed}`, {
-            headers: {
-                'x-api-key': apiKeyDog // Include Dog API key in the request headers
-            }
-        });
-        const breedData = await response.json();
 
-        if (breedData.length > 0) {
-            // Fetch image URL using reference_image_id
-            const referenceImageId = breedData[0].reference_image_id;
-            const imageResponse = await fetch(`https://api.thedogapi.com/v1/images/${referenceImageId}`, {
-                headers: {
-                    'x-api-key': apiKeyDog // Include Dog API key in the request headers
-                }
-            });
-            const imageData = await imageResponse.json();
 
-            // Return image URL
-            res.json({ imageUrl: imageData.url });
-        } else {
-            res.status(404).json({ error: 'Breed not found' });
-        }
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch dog image: ' + error.message });
-    }
-});
+
+
+
 
 
 
