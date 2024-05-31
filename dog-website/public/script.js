@@ -1,3 +1,33 @@
+// Function to fetch dog image by breed name
+async function fetchDogImage() {
+    const breed = document.getElementById('input-text').value.trim(); // Get the breed input from the user
+
+    try {
+        const response = await fetch(`http://localhost:3000/api/dog/image/${breed}`);
+        const data = await response.json();
+
+        // Check if the response contains an image URL
+        if (data.imageUrl) {
+            // Display the dog image
+            displayDogImage(data.imageUrl);
+        } else {
+            // Display an error message if breed not found
+            document.getElementById('image-box').textContent = "Breed not found";
+        }
+    } catch (error) {
+        console.error('Error fetching dog image:', error);
+        document.getElementById('image-box').textContent = "Error fetching dog image";
+    }
+}
+
+// Function to display dog image
+function displayDogImage(imageUrl) {
+    document.getElementById('image-box').innerHTML = `<img src="${imageUrl}" alt="Dog" class="h-full w-full object-cover rounded-lg"/>`;
+}
+
+
+
+
 // Global variable to indicate if the API key is connected
 let testConnected = 0;
 let verifyPromise = null; // Global promise for API key verification

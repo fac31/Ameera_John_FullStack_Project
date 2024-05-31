@@ -4,14 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dog Breed Search</title>
+    <link rel="stylesheet" href="../public/stylesheet.css">
 </head>
 <body>
     <h1>Dog Breed Information</h1>
-    <div class="input-text">
-        <input id="input-text" placeholder="Enter Breed Name...."></input>
-    <button onclick="displayText()">Search</button>
-    <div id="breedImageContainer"></div>
-    <div id="display-area"></div>
+    <div class="input-container">
+        <input id="input-text" class="input-text" placeholder="Enter Breed Name....">
+        <button class="search-button" onclick="displayText(), fetchDogImage()">Search</button>
+    </div>
+    <div id="image-box" class="image-box">
+        Image here
+    </div>
+    <div id="display-area" class="display-area"></div>
     <script src="script.js"></script>
 </body>
 </html>
