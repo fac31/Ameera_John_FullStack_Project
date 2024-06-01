@@ -1,4 +1,14 @@
 let userInput = null;
+
+//dog data variables
+let bred_forGlobal =null;
+let breed_groupGlobal =null;
+let height_ImperialGlobal =null;
+let height_MetricGlobal =null;
+let weight_ImperialGlobal =null;
+let weight_MetricGlobal =null;
+let life_spanGlobal =null;
+let temperamentGlobal =null;
 let idImageGlobal =null;
 
 // Function to handle button click
@@ -45,16 +55,38 @@ async function dogData() {
                 matchingBreed = breed;
                 foundImageID = breed.image.id;
                 idImageGlobal = foundImageID;
+
+                 bred_for =breed.bred_for;
+                 breed_group =breed.breed_group;
+                 height_Imperial=breed.height.imperial;
+                 height_Metric=breed.height.metric;
+                 weight_Imperial=breed.weight.imperial;
+                 weight_Metric =breed.weight.metric;;
+                 life_span=breed.life_span;
+                 temperament=breed.temperament;
+
+
+                 bred_forGlobal =bred_for;
+                 breed_groupGlobal =breed_group;
+                 height_ImperialGlobal =height_Imperial;
+                 height_MetricGlobal =height_Metric;
+                 weight_ImperialGlobal =weight_Imperial;
+                 weight_MetricGlobal =weight_Metric;
+                 life_spanGlobal =life_span;
+                 temperamentGlobal =temperament;
+
+
                 break; // Exit the loop once a match is found
             }
         }
 
         if (matchingBreed) {
-            console.log("Breed found:");
+            console.log("Breed foundconfimation :");
             console.log(`user input: "${userInput}"`);
             console.log("Breed:", matchingBreed);
             console.log("Image ID:", foundImageID);
 
+            displayDogFacts();
             randomDogImage();
         } else {
             console.log(`No breed found matching "${userInput}"`);
@@ -137,6 +169,25 @@ function randomDogImage() {
         });
 } */
 
+function displayDogFacts() {
+
+   
+    var extraInfo = document.getElementById('extra-info');
+    
+    extraInfo.innerHTML = ""; // Clear existing content
+    
+    var facts = 
+        "Bred for: " + bred_forGlobal + "<br>" +
+        "Breed Group: " + breed_groupGlobal + "<br>" +
+        "Height Imperial: " + height_ImperialGlobal + "<br>" +
+        "Height Metric: " + height_MetricGlobal + "<br>" +
+        "Weight Imperial: " + weight_ImperialGlobal + "<br>" +
+        "Weight Metric: " + weight_MetricGlobal + "<br>" +
+        "Life Span: " + life_spanGlobal + "<br>" +
+        "Temperament: " + temperamentGlobal;
+
+    extraInfo.innerHTML = facts;
+}
 
 // Global variable to indicate if the API key is connected
 let testConnected = 0;
