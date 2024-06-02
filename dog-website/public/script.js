@@ -11,6 +11,7 @@ let life_spanGlobal =null;
 let temperamentGlobal =null;
 let idImageGlobal =null;
 
+/*
 // Function to handle button click
 function handleButtonClick() {
     userInput = null; 
@@ -90,6 +91,7 @@ async function dogData() {
             randomDogImage();
         } else {
             console.log(`No breed found matching "${userInput}"`);
+            document.getElementById('display-area').userInput = "No breed found matching ";
         }
 
     } catch (error) {
@@ -138,45 +140,15 @@ function randomDogImage() {
         document.getElementById('image-box').textContent = "Failed to load image.";
     });
 }
-/* // Function to fetch a random dog image and display it in the image box
-function randomDogImage() {
-    fetch('https://api.thedogapi.com/v1/images/search')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            // Log the full JSON data
-            console.log('Fetched JSON data:', JSON.stringify(data, null, 2));
-            
-            if (data.length > 0) {
-                const imageUrl = data[0].url;
-                const imageID = data[0].id;
-                const imageBox = document.getElementById('image-box');
-                imageBox.innerHTML = `<img src="${imageUrl}" alt="Random Dog Image" style="max-width: 100%; height: auto;">`;
-
-                // Log the image ID
-                console.log('Image ID:', imageID);
-            } else {
-                document.getElementById('image-box').textContent = "No image found.";
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching dog image:', error);
-            document.getElementById('image-box').textContent = "Failed to load image.";
-        });
-} */
 
 function displayDogFacts() {
 
    
-    var extraInfo = document.getElementById('extra-info');
+    const extraInfo = document.getElementById('extra-info');
     
     extraInfo.innerHTML = ""; // Clear existing content
     
-    var facts = 
+    const facts = 
         "Bred for: " + bred_forGlobal + "<br>" +
         "Breed Group: " + breed_groupGlobal + "<br>" +
         "Height Imperial: " + height_ImperialGlobal + "<br>" +
@@ -188,6 +160,99 @@ function displayDogFacts() {
 
     extraInfo.innerHTML = facts;
 }
+
+*/
+
+async function handleButtonClick() {
+    const inputText = document.getElementById('input-text').value.trim().toLowerCase();
+    console.log(`User input: "${inputText}"`);
+
+    if (inputText) {
+        try {
+            const response = await fetch(`http://localhost:3000/api/dog-breed?breed=${inputText}`);
+            displayText();
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const breed = await response.json();
+            console.log("Breed found:", breed);
+
+            bred_forGlobal = breed.bred_for;
+            breed_groupGlobal = breed.breed_group;
+            height_ImperialGlobal = breed.height.imperial;
+            height_MetricGlobal = breed.height.metric;
+            weight_ImperialGlobal = breed.weight.imperial;
+            weight_MetricGlobal = breed.weight.metric;
+            life_spanGlobal = breed.life_span;
+            temperamentGlobal = breed.temperament;
+            idImageGlobal = breed.image.id;
+
+            displayDogFacts();
+            randomDogImage();
+        } catch (error) {
+            console.error('Fetch error:', error);
+            document.getElementById('display-area').innerText = "An error occurred. Please try again later.";
+        }
+    } else {
+        console.log("Please enter a breed name.");
+        document.getElementById('display-area').innerText = "Please enter a breed name.";
+    }
+}
+
+function displayDogFacts() {
+    const extraInfo = document.getElementById('extra-info');
+    extraInfo.innerHTML = `
+        Bred for: ${bred_forGlobal}<br>
+        Breed Group: ${breed_groupGlobal}<br>
+        Height Imperial: ${height_ImperialGlobal}<br>
+        Height Metric: ${height_MetricGlobal}<br>
+        Weight Imperial: ${weight_ImperialGlobal}<br>
+        Weight Metric: ${weight_MetricGlobal}<br>
+        Life Span: ${life_spanGlobal}<br>
+        Temperament: ${temperamentGlobal}
+    `;
+}
+
+async function randomDogImage() {
+    if (!idImageGlobal) {
+        console.error('No image ID set. Please search for a breed first.');
+        document.getElementById('image-box').textContent = "No image ID set. Please search for a breed first.";
+        return;
+    }
+
+    try {
+        const response = await fetch(`https://api.thedogapi.com/v1/images/${idImageGlobal}`, {
+            headers: {
+                'x-api-key': 'YOUR_API_KEY_HERE'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        const imageUrl = data.url;
+        const imageBox = document.getElementById('image-box');
+        imageBox.innerHTML = `<img src="${imageUrl}" alt="Dog Image" style="max-width: 100%; height: auto;">`;
+
+        if (data.breeds && data.breeds.length > 0) {
+            const dogName = data.breeds[0].name;
+            console.log('Dog name:', dogName);
+        } else {
+            console.log('No breed information available for this image.');
+        }
+    } catch (error) {
+        console.error('Error fetching dog image:', error);
+        document.getElementById('image-box').textContent = "Failed to load image.";
+    }
+}
+
+
+
+
+
 
 // Global variable to indicate if the API key is connected
 let testConnected = 0;
@@ -237,8 +302,8 @@ function handleResponse(response) {
 // Function to process API response data
 function processData(data) {
     if (data.choices && data.choices.length > 0 && data.choices[0].message) {
-        var generatedText = data.choices[0].message.content;
-        var displayArea = document.getElementById('display-area');
+        const generatedText = data.choices[0].message.content;
+        const displayArea = document.getElementById('display-area');
         displayArea.textContent = generatedText; // Displaying the response directly
     } else {
         document.getElementById('display-area').textContent = "No response or unexpected response structure.";
@@ -255,7 +320,7 @@ function handleError(error) {
 
 // Function to capture form data and send it to the server for API interaction
 function displayText() {
-    var text = document.getElementById('input-text').value;
+    const text = document.getElementById('input-text').value;
     document.getElementById('input-text').value = ""; // Clear the text area upon inputting the form data
 
     verifyAPIKey().then(verified => {
@@ -269,7 +334,7 @@ function displayText() {
 
 // Function to send request to the OpenAI API via server
 function sendRequest(text) {
-    var requestData = {
+    const requestData = {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

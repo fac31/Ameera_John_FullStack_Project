@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import cors from "cors";
+import fetch from 'node-fetch';
 
 dotenv.config();
 
@@ -61,9 +62,37 @@ app.post('/api/send', async (req, res) => { //constructs the request data object
     }
 });
 
-///////////////////////
+////////////////////////dog 
 
+//Here we add a route to the server to fetch dog breed information
 
+app.get('/api/dog-breed', async (req, res) => {
+    const breedName = req.query.breed;
+    try {
+        const response = await fetch('https://api.thedogapi.com/v1/breeds', {
+            method: 'GET',
+            headers: {
+                'x-api-key': process.env.DOG_API_KEY
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        const matchingBreed = data.find(breed => breed.name.toLowerCase().includes(breedName.toLowerCase()));
+
+        if (matchingBreed) {
+            res.json(matchingBreed);
+        } else {
+            res.status(404).json({ error: 'Breed not found' });
+        }
+    } catch (error) {
+        console.error('Fetch error:', error);
+        res.status(500).json({ error: 'Failed to fetch data' });
+    }
+});
 
 
 
