@@ -7,16 +7,18 @@
     <link rel="stylesheet" href="../public/stylesheet.css">
 </head>
 <body>
+    <header>
     <h1>Dog Breed Information</h1>
+    </header>
+    <div id="image-box" class="image-box hidden">
+        Image here
+    </div>
+    <div id="extra-info" class="display-area hidden"></div>
+    <div id="display-area" class="display-area hidden" ></div>
     <div class="input-container">
         <input id="input-text" class="input-text" placeholder="Enter Breed Name....">
         <button class="search-button" onclick="handleButtonClick()">Search</button>
     </div>
-    <div id="image-box" class="image-box">
-        Image here
-    </div>
-    <div id="display-area" class="display-area"></div> //chat gtp
-    <div id="extra-info" class="display-area"></div> //data base
     <script src="script.js"></script>
 </body>
 </html>
