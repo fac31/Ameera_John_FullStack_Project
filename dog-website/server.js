@@ -96,15 +96,6 @@ app.get('/api/dog-breed', async (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-
 // Define the port and start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
