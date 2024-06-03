@@ -45,7 +45,7 @@ app.post('/api/send', async (req, res) => { //constructs the request data object
             model: "gpt-3.5-turbo",
             messages: [
                 { role: "system", content: "You are a helpful assistant." },
-                { role: "user", content: "Write one funy interesting facts"+ userInput +" dog breed." }
+                { role: "user", content: "Alsways start wirj One fun and interesting fact about" + "."+" Write one funy interesting facts"+ userInput +" dog breed." }
             ],
             max_tokens: 100
         })
