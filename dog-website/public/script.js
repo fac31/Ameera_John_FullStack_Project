@@ -1,6 +1,7 @@
 let userInput = null;
 
 //dog data variables
+let bred_nameGlobal =null;
 let bred_forGlobal =null;
 let breed_groupGlobal =null;
 let height_ImperialGlobal =null;
@@ -28,6 +29,7 @@ async function handleButtonClick() {
             console.log("Breed found:", breed);
 
             bred_forGlobal = breed.bred_for;
+            bred_nameGlobal = breed.name;
             breed_groupGlobal = breed.breed_group;
             height_ImperialGlobal = breed.height.imperial;
             height_MetricGlobal = breed.height.metric;
@@ -52,6 +54,7 @@ async function handleButtonClick() {
 function displayDogFacts() {
     const extraInfo = document.getElementById('extra-info');
     extraInfo.innerHTML = `
+        Bred Name: ${bred_nameGlobal}<br>
         Bred for: ${bred_forGlobal}<br>
         Breed Group: ${breed_groupGlobal}<br>
         Height Imperial: ${height_ImperialGlobal}<br>
@@ -91,6 +94,9 @@ async function randomDogImage() {
         extraInfoBox.classList.remove('hidden');
         displayAreaBox.classList.remove('hidden');
 
+         // Adjust margins when image is displayed
+         adjustMargins();
+
         if (data.breeds && data.breeds.length > 0) {
             const dogName = data.breeds[0].name;
             console.log('Dog name:', dogName);
@@ -105,7 +111,13 @@ async function randomDogImage() {
 
 
 
-
+function adjustMargins() {
+    const inputText = document.getElementById('input-text');
+    const inputContainer = document.getElementById('input-container');
+    
+    inputText.style.marginTop = '0';  // Remove margin-top from input-text
+    inputContainer.style.marginTop = '2rem';  // Change margin-top of input-container
+}
 
 
 // Global variable to indicate if the API key is connected
