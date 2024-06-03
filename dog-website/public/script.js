@@ -12,7 +12,6 @@ let life_spanGlobal =null;
 let temperamentGlobal =null;
 let idImageGlobal =null;
 
-
 async function handleButtonClick() {
     const inputText = document.getElementById('input-text').value.trim().toLowerCase();
     console.log(`User input: "${inputText}"`);
@@ -216,3 +215,7 @@ function sendRequest(text) {
         .then(processData)
         .catch(handleError);
 }
+
+
+
+//this is comlete version 1
