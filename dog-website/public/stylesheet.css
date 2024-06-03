@@ -3,6 +3,7 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    background-color: 	#FAF9F6;
 }
 
 header {
@@ -23,6 +24,7 @@ header {
 .image-box, .display-area {
     border: 1px solid #ccc;
     padding: 1rem;
+    background-color: 	#ffffff;
 }
 
 .input-container {
@@ -63,4 +65,51 @@ header {
 
 .hidden {
     display: none;
+}
+
+
+/* Welcome to Dog World page styles */
+.welcome-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('../image/GettyImages-175928868-120f47906f4849969fcdab28e2e4f494.jpg') no-repeat center center/cover;  /* Add a fun background image */
+}
+
+.welcome-container {
+    display: grid;
+    grid-template-rows: auto auto auto;
+    gap: 1rem;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.8);  /* Add a white background with some transparency */
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.welcome-container h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    color: #af4cac;
+}
+
+.welcome-container p {
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.welcome-button {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 20px;
+    background-color:#af4cac;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.welcome-button:hover {
+    background-color: #5345a0;
 }
