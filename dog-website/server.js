@@ -8,9 +8,13 @@ dotenv.config();
 
 const app = express();
 
+//  Middleware
+
 app.use(cors());
 app.use(express.static("public"));
 app.use(bodyParser.json());
+
+// route handler to verify openAI api key
 
 app.get("/api/verifykey", (req, res) => {
   console.log("Received request for API key verification");
@@ -23,10 +27,12 @@ app.get("/api/verifykey", (req, res) => {
   }
 });
 
+// route handle for the openAI api
 app.post("/api/send", async (req, res) => {
-  console.log("User Input:", req.body.messages[0].content);
+  const { friendliness, trainability, activity, independence, size } = req.body;
 
-  const userInput = req.body.messages[0].content;
+  const userInput = `I am looking for a dog that is ${friendliness}, has ${trainability} trainability, ${activity} activity level, ${independence} independence, and is ${size} in size.`;
+
   const apiKey = process.env.API_KEY;
   const requestData = {
     method: "POST",
@@ -38,13 +44,7 @@ app.post("/api/send", async (req, res) => {
       model: "gpt-3.5-turbo",
       messages: [
         { role: "system", content: "You are a helpful assistant." },
-        {
-          role: "user",
-          content:
-            "Always start with one fun and interesting fact about " +
-            userInput +
-            " dog breed.",
-        },
+        { role: "user", content: userInput },
       ],
       max_tokens: 100,
     }),
@@ -64,20 +64,19 @@ app.post("/api/send", async (req, res) => {
   }
 });
 
+// route handle for the dog api
+
 app.get("/api/dog-breed", async (req, res) => {
   const breedName = req.query.breed;
-  console.log("Breed name requested:", breedName);
   try {
     const response = await fetch("https://api.thedogapi.com/v1/breeds", {
       method: "GET",
       headers: {
         "x-api-key": process.env.DOG_API_KEY,
       },
-      timeout: 10000, // 10 seconds timeout
     });
 
     if (!response.ok) {
-      console.error("Response not OK:", response.status, response.statusText);
       throw new Error("Network response was not ok");
     }
 
@@ -96,6 +95,8 @@ app.get("/api/dog-breed", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch data" });
   }
 });
+
+// define port for the server
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

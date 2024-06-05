@@ -23,7 +23,6 @@
         <div id="image-box" class="image-box hidden">Image here</div>
         <div id="extra-info" class="display-area hidden"></div>
       </div>
-      <div id="display-area" class="display-area hidden"></div>
     </div>
     <div id="input-container" class="input-container">
       <input
@@ -35,6 +34,76 @@
         <i class="fa-solid fa-magnifying-glass"></i>
       </button>
     </div>
+    <h1 class="choose-dog">Choose Your Preferred Dog Qualities</h1>
+    <form id="dog-form" action="/submit" method="POST">
+      <!-- Friendliness -->
+      <fieldset>
+        <legend>Friendliness</legend>
+        <label>
+          <input type="radio" name="friendliness" value="friendly" required />
+          Friendly
+        </label>
+        <label>
+          <input type="radio" name="friendliness" value="aloof" />
+          Aloof
+        </label>
+      </fieldset>
+
+      <!-- Trainability -->
+      <fieldset>
+        <legend>Trainability</legend>
+        <label>
+          <input type="radio" name="trainability" value="easy" required />
+          Easy
+        </label>
+        <label>
+          <input type="radio" name="trainability" value="hard" />
+          Hard
+        </label>
+      </fieldset>
+
+      <!-- Activity -->
+      <fieldset>
+        <legend>Activity</legend>
+        <label>
+          <input type="radio" name="activity" value="high" required />
+          High
+        </label>
+        <label>
+          <input type="radio" name="activity" value="low" />
+          Low
+        </label>
+      </fieldset>
+
+      <!-- Independence -->
+      <fieldset>
+        <legend>Independence</legend>
+        <label>
+          <input type="radio" name="independence" value="yes" required />
+          Yes
+        </label>
+        <label>
+          <input type="radio" name="independence" value="no" />
+          No
+        </label>
+      </fieldset>
+
+      <!-- Size -->
+      <fieldset>
+        <legend>Size</legend>
+        <label>
+          <input type="radio" name="size" value="big" required />
+          Big over 35lbs
+        </label>
+        <label>
+          <input type="radio" name="size" value="small" />
+          Small under 35lbs
+        </label>
+      </fieldset>
+      <input type="submit" value="Submit" class="submit-button" />
+    </form>
+    <div id="form-display-area" class="form-display-area"></div>
+
     <footer>
       <div class="footer__div">
         <img src="../image/dog_world_logo.png" alt="logo of dog world" />
